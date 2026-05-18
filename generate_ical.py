@@ -23,7 +23,11 @@ BREAKFAST_KEYWORDS = [
     "waffle", "pancake", "muffin", "bagel", "cereal", "oatmeal",
     "granola", "french toast", "breakfast", "biscuit", "donut",
     "pop tart", "cinnamon", "cocoa puff", "lucky charm", "cheerio",
-    "fruit juice", "juice", "yogurt", "egg", "mini cinnis"
+    "fruit juice", "juice", "yogurt", "egg", "mini cinn"
+]
+
+LUNCH_EXCLUDES = [
+    "assorted savory bread"
 ]
 
 
@@ -62,9 +66,12 @@ def extract_lunch_items(menu_items: list) -> list[str]:
         # Only grab entrees
         if food.get("food_category") != "entree":
             continue
-        # Skip obvious breakfast items
         name_lower = name.lower()
+        # Skip obvious breakfast items
         if any(kw in name_lower for kw in BREAKFAST_KEYWORDS):
+            continue
+        # Skip excluded lunch items
+        if any(kw in name_lower for kw in LUNCH_EXCLUDES):
             continue
         if name not in seen:
             seen.add(name)
