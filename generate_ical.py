@@ -46,30 +46,20 @@ def extract_lunch_items(menu_items: list) -> list[str]:
     seen = set()
     items = []
     for item in menu_items:
-        # Only include items tagged to the Lunch section
-        section = item.get("section_title", "") or ""
-        if "lunch" not in section.lower():
-            continue
         food = item.get("food")
         if not food:
             continue
         name = food.get("name", "").strip()
-        if name and name not in seen:
+        if not name:
+            continue
+        # Print everything so we can see the structure
+        print(f"  ITEM: {name}")
+        print(f"    section_title: {item.get('section_title')}")
+        print(f"    food_category: {food.get('food_category')}")
+        print(f"    menu_type_name: {item.get('menu_type_name')}")
+        if name not in seen:
             seen.add(name)
             items.append(name)
-
-    # Fallback: if section filtering got nothing, try entree category
-    if not items:
-        for item in menu_items:
-            food = item.get("food")
-            if not food:
-                continue
-            if food.get("food_category") == "entree":
-                name = food.get("name", "").strip()
-                if name and name not in seen:
-                    seen.add(name)
-                    items.append(name)
-
     return items
 
 
