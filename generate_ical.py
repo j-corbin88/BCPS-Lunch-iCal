@@ -19,6 +19,13 @@ CALENDAR_NAME = "BCPS School Lunch"
 WEEKS_AHEAD = 4
 # ─────────────────────────────────────────────────────────────────────────────
 
+BREAKFAST_KEYWORDS = [
+    "waffle", "pancake", "muffin", "bagel", "cereal", "oatmeal",
+    "granola", "french toast", "breakfast", "biscuit", "donut",
+    "pop tart", "cinnamon", "cocoa puff", "lucky charm", "cheerio",
+    "fruit juice", "juice", "yogurt", "egg"
+]
+
 
 def get_monday(d: date) -> date:
     return d - timedelta(days=d.weekday())
@@ -52,11 +59,13 @@ def extract_lunch_items(menu_items: list) -> list[str]:
         name = food.get("name", "").strip()
         if not name:
             continue
-        # Print everything so we can see the structure
-        print(f"  ITEM: {name}")
-        print(f"    section_title: {item.get('section_title')}")
-        print(f"    food_category: {food.get('food_category')}")
-        print(f"    menu_type_name: {item.get('menu_type_name')}")
+        # Only grab entrees
+        if food.get("food_category") != "entree":
+            continue
+        # Skip obvious breakfast items
+        name_lower = name.lower()
+        if any(kw in name_lower for kw in BREAKFAST_KEYWORDS):
+            continue
         if name not in seen:
             seen.add(name)
             items.append(name)
@@ -134,7 +143,7 @@ def main():
 
         days = data.get("days", [])
         for day_data in days:
-            day_date_str = day_date_str = day_data.get("date")
+            day_date_str = day_data.get("date")
             if not day_date_str:
                 continue
 
