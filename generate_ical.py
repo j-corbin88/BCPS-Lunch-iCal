@@ -9,7 +9,6 @@ import urllib.request
 import urllib.error
 from datetime import datetime, date, timedelta
 import uuid
-import os
 
 # ── Configuration ────────────────────────────────────────────────────────────
 DISTRICT    = "bcps"
@@ -17,13 +16,11 @@ SCHOOL_SLUG = "bcps-weekly-menus"
 MENU_TYPE   = "weekly-menus"
 OUTPUT_FILE = "lunch.ics"
 CALENDAR_NAME = "BCPS School Lunch"
-# How many weeks ahead to fetch (1 = current week only, 2 = current + next, etc.)
 WEEKS_AHEAD = 4
 # ─────────────────────────────────────────────────────────────────────────────
 
 
 def get_monday(d: date) -> date:
-    """Return the Monday of the week containing date d."""
     return d - timedelta(days=d.weekday())
 
 
@@ -45,28 +42,14 @@ def fetch_week(monday: date) -> dict | None:
         return None
 
 
-def extract_entrees(menu_items: list) -> list[str]:
-    """Pull entree-category food names from a day's menu_items list."""
-    entrees = []
-    for item in menu_items:
-        food = item.get("food")
-        if not food:
-            continue
-        category = food.get("food_category", "")
-        name = food.get("name", "").strip()
-        if not name:
-            continue
-        # Include entrees, or fall back to anything if no entrees found
-        if category == "entree":
-            entrees.append(name)
-    return entrees
-
-
-def extract_all_items(menu_items: list) -> list[str]:
-    """Fallback: return all named food items."""
+def extract_lunch_items(menu_items: list) -> list[str]:
     seen = set()
     items = []
     for item in menu_items:
+        # Only include items tagged to the Lunch section
+        section = item.get("section_title", "") or ""
+        if "lunch" not in section.lower():
+            continue
         food = item.get("food")
         if not food:
             continue
@@ -74,15 +57,31 @@ def extract_all_items(menu_items: list) -> list[str]:
         if name and name not in seen:
             seen.add(name)
             items.append(name)
+
+    # Fallback: if section filtering got nothing, try entree category
+    if not items:
+        for item in menu_items:
+            food = item.get("food")
+            if not food:
+                continue
+            if food.get("food_category") == "entree":
+                name = food.get("name", "").strip()
+                if name and name not in seen:
+                    seen.add(name)
+                    items.append(name)
+
     return items
 
 
 def ical_escape(text: str) -> str:
-    return text.replace("\\", "\\\\").replace(";", "\\;").replace(",", "\\,").replace("\n", "\\n")
+    return (text
+        .replace("\\", "\\\\")
+        .replace(";", "\\;")
+        .replace(",", "\\,")
+        .replace("\n", "\\n"))
 
 
 def fold(line: str) -> str:
-    """iCal line folding at 75 octets."""
     encoded = line.encode("utf-8")
     if len(encoded) <= 75:
         return line
@@ -145,7 +144,7 @@ def main():
 
         days = data.get("days", [])
         for day_data in days:
-            day_date_str = day_data.get("date")
+            day_date_str = day_date_str = day_data.get("date")
             if not day_date_str:
                 continue
 
@@ -154,7 +153,6 @@ def main():
             except ValueError:
                 continue
 
-            # Skip weekends
             if day_date.weekday() >= 5:
                 continue
 
@@ -162,30 +160,26 @@ def main():
             if not menu_items:
                 continue
 
-            entrees = extract_entrees(menu_items)
-            if not entrees:
-                entrees = extract_all_items(menu_items)
-            if not entrees:
+            items = extract_lunch_items(menu_items)
+            if not items:
                 continue
 
-            # Build summary: first entree (keep it short for calendar display)
-            primary = entrees[0]
+            primary = items[0]
             summary = f"🍽 Lunch: {primary}"
-            if len(entrees) > 1:
-                summary += f" (+{len(entrees)-1} more)"
+            if len(items) > 1:
+                summary += f" (+{len(items)-1} more)"
 
-            # Full description: all items
-            description = "Today's Lunch Menu:\\n" + "\\n".join(f"• {e}" for e in entrees)
+            description = "Today's Lunch Menu:\n" + "\n".join(f"• {e}" for e in items)
 
             all_events.append({
                 "date": day_date,
                 "summary": summary,
                 "description": description,
             })
-            print(f"  {day_date}: {', '.join(entrees)}")
+            print(f"  {day_date}: {', '.join(items)}")
 
     if not all_events:
-        print("No menu events found. Check the district/school/menu-type slugs.")
+        print("No menu events found.")
         return
 
     ical_content = build_ical(all_events)
