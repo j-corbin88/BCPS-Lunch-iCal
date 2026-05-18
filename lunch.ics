@@ -7,110 +7,85 @@ CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
 UID:7b0d2a4c-1259-5111-9eba-b986fcb37eaf
-DTSTAMP:20260518T141909Z
+DTSTAMP:20260518T142719Z
 DTSTART;VALUE=DATE:20260518
 DTEND;VALUE=DATE:20260518
-SUMMARY:🍽 Lunch: Oatmeal Chip Bar (+12 more)
-DESCRIPTION:Today's Lunch Menu:\n• Oatmeal Chip Bar\n• Mini Waffles\n
- • 100% Fruit Juice\n• Assorted Fresh Fruits\n• 1% White Milk\n• Bre
- aded Mozzarella Sticks\n• Yogurt Entree\, 8oz\n• Bento Box with Peppero
- ni & Cheese\n• Bento Box with Egg\n• Marinara Sauce\n• Corn\n• Asso
- rted Fresh Vegetables\n• Assorted Milk
+SUMMARY:🍽 Lunch: Breaded Mozzarella Sticks (+1 more)
+DESCRIPTION:Today's Lunch Menu:\n• Breaded Mozzarella Sticks\n• Bento B
+ ox with Pepperoni & Cheese
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:c469dd05-a7ed-5832-a297-79646b63f688
-DTSTAMP:20260518T141909Z
+DTSTAMP:20260518T142719Z
 DTSTART;VALUE=DATE:20260519
 DTEND;VALUE=DATE:20260519
-SUMMARY:🍽 Lunch: Assorted Muffin (+12 more)
-DESCRIPTION:Today's Lunch Menu:\n• Assorted Muffin\n• Mini Cinnis\n• 
- 100% Fruit Juice\n• Assorted Fresh Fruits\n• 1% White Milk\n• Orange 
- Chicken\n• Yogurt Entree\, 8oz\n• Turkey & Cheese Sliders\n• Bento Bo
- x with Hummus\n• Brown Rice\n• Paradise Punch-100% Vegetable/Fruit Juic
- e\n• Assorted Fresh Vegetables\n• Assorted Milk
+SUMMARY:🍽 Lunch: Mini Cinnis (+3 more)
+DESCRIPTION:Today's Lunch Menu:\n• Mini Cinnis\n• Orange Chicken\n• T
+ urkey & Cheese Sliders\n• Bento Box with Hummus
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:2b382cc1-dc71-58bc-94d3-27dccbe4b7bd
-DTSTAMP:20260518T141909Z
+DTSTAMP:20260518T142719Z
 DTSTART;VALUE=DATE:20260520
 DTEND;VALUE=DATE:20260520
-SUMMARY:🍽 Lunch: Pancake and Beef Sausage Sandwich (+13 more)
-DESCRIPTION:Today's Lunch Menu:\n• Pancake and Beef Sausage Sandwich\n•
-  Waffle\, Sausage & Cheese Sandwich\n• Assorted Savory Bread\n• 100% Fr
- uit Juice\n• Assorted Fresh Fruits\n• 1% White Milk\n• Chicken Nugget
- s\n• Yogurt Entree\, 8oz\n• Bento Box with Ham (Pork) & Cheese Pinwheel
- s\n• Bento Box with Cheese\n• Cornbread Muffin\n• Tossed Salad\n• A
- ssorted Fresh Vegetables\n• Assorted Milk
+SUMMARY:🍽 Lunch: Assorted Savory Bread (+3 more)
+DESCRIPTION:Today's Lunch Menu:\n• Assorted Savory Bread\n• Chicken Nug
+ gets\n• Bento Box with Ham (Pork) & Cheese Pinwheels\n• Bento Box with 
+ Cheese
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:614faf1a-c00f-55a6-ab58-eada4fd320a7
-DTSTAMP:20260518T141909Z
+DTSTAMP:20260518T142719Z
 DTSTART;VALUE=DATE:20260521
 DTEND;VALUE=DATE:20260521
-SUMMARY:🍽 Lunch: Breakfast Pocket w/Turkey Sausage (+12 more)
-DESCRIPTION:Today's Lunch Menu:\n• Breakfast Pocket w/Turkey Sausage\n•
-  100% Fruit Juice\n• Assorted Fresh Fruits\n• 1% White Milk\n• Taco S
- alad\n• Yogurt Entree\, 8oz\n• Chicken Caesar Salad\n• Bento Box with
-  Tuna\n• Tostitos Rounds\n• Salsa\n• Beans\, Fiesta Black\n• Assort
- ed Fresh Vegetables\n• Assorted Milk
+SUMMARY:🍽 Lunch: Taco Salad (+2 more)
+DESCRIPTION:Today's Lunch Menu:\n• Taco Salad\n• Chicken Caesar Salad\n
+ • Bento Box with Tuna
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:2e756ddf-5715-57b3-b55f-892155deaa99
-DTSTAMP:20260518T141909Z
+DTSTAMP:20260518T142719Z
 DTSTART;VALUE=DATE:20260522
 DTEND;VALUE=DATE:20260522
-SUMMARY:🍽 Lunch: Cereal\, Assorted (+13 more)
-DESCRIPTION:Today's Lunch Menu:\n• Cereal\, Assorted\n• French Toast St
- icks\n• 100% Fruit Juice\n• Assorted Fresh Fruits\n• 1% White Milk\n
- • Personal Pizza (Round)\n• Ranchero Pizza\n• Yogurt Entree\, 8oz\n
- • Mgr's Choice Sand/Salad/Bento\n• Mgr Choice Vegetarian Salad/Bento\n
- • Cherry Tomatoes\n• Green Beans\n• Assorted Fresh Vegetables\n• As
- sorted Milk
+SUMMARY:🍽 Lunch: Personal Pizza (Round) (+3 more)
+DESCRIPTION:Today's Lunch Menu:\n• Personal Pizza (Round)\n• Ranchero P
+ izza\n• Mgr's Choice Sand/Salad/Bento\n• Mgr Choice Vegetarian Salad/Be
+ nto
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:bc6bcb60-acb2-5afb-9606-14b0c190073c
-DTSTAMP:20260518T141909Z
+DTSTAMP:20260518T142719Z
 DTSTART;VALUE=DATE:20260526
 DTEND;VALUE=DATE:20260526
-SUMMARY:🍽 Lunch: Oatmeal Chip Bar (+13 more)
-DESCRIPTION:Today's Lunch Menu:\n• Oatmeal Chip Bar\n• Mini Waffles\n
- • 100% Fruit Juice\n• Assorted Fresh Fruits\n• 1% White Milk\n• Chi
- cken Nuggets\n• Yogurt Entree\, 8oz\n• Bento Box with Pepperoni & Chees
- e\n• Bento Box with Hummus\n• Cornbread Muffin\n• Green Beans\n• Ba
- by Carrots\n• Assorted Fresh Vegetables\n• Assorted Milk
+SUMMARY:🍽 Lunch: Chicken Nuggets (+2 more)
+DESCRIPTION:Today's Lunch Menu:\n• Chicken Nuggets\n• Bento Box with Pe
+ pperoni & Cheese\n• Bento Box with Hummus
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:be8c3bfb-937b-5cd9-ae19-347232f450e3
-DTSTAMP:20260518T141909Z
+DTSTAMP:20260518T142719Z
 DTSTART;VALUE=DATE:20260527
 DTEND;VALUE=DATE:20260527
-SUMMARY:🍽 Lunch: Pancake and Beef Sausage Sandwich (+14 more)
-DESCRIPTION:Today's Lunch Menu:\n• Pancake and Beef Sausage Sandwich\n•
-  Waffle\, Sausage & Cheese Sandwich\n• Assorted Savory Bread\n• 100% Fr
- uit Juice\n• Assorted Fresh Fruits\n• 1% White Milk\n• Chicken Tinga\
- n• Yogurt Entree\, 8oz\n• Bento Box with Turkey & Cheese Pinwheels\n•
-  Bento Box with Cheese\n• Brown Rice\n• Soft Tortilla\n• Paradise Pun
- ch-100% Vegetable/Fruit Juice\n• Assorted Fresh Vegetables\n• Assorted 
- Milk
+SUMMARY:🍽 Lunch: Assorted Savory Bread (+3 more)
+DESCRIPTION:Today's Lunch Menu:\n• Assorted Savory Bread\n• Chicken Tin
+ ga\n• Bento Box with Turkey & Cheese Pinwheels\n• Bento Box with Cheese
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:ffaec9b9-791f-512f-8c27-f63fef18ab5d
-DTSTAMP:20260518T141909Z
+DTSTAMP:20260518T142719Z
 DTSTART;VALUE=DATE:20260529
 DTEND;VALUE=DATE:20260529
-SUMMARY:🍽 Lunch: Cereal\, Assorted (+12 more)
-DESCRIPTION:Today's Lunch Menu:\n• Cereal\, Assorted\n• French Toast St
- icks\n• 100% Fruit Juice\n• Assorted Fresh Fruits\n• 1% White Milk\n
- • Personal Pizza (Round)\n• Pepperoni and Sausage Pizza\n• Yogurt Ent
- ree\, 8oz\n• Mgr's Choice Sand/Salad/Bento\n• Mgr Choice Vegetarian Sal
- ad/Bento\n• Corn\n• Assorted Fresh Vegetables\n• Assorted Milk
+SUMMARY:🍽 Lunch: Personal Pizza (Round) (+3 more)
+DESCRIPTION:Today's Lunch Menu:\n• Personal Pizza (Round)\n• Pepperoni 
+ and Sausage Pizza\n• Mgr's Choice Sand/Salad/Bento\n• Mgr Choice Vegeta
+ rian Salad/Bento
 TRANSP:TRANSPARENT
 END:VEVENT
 END:VCALENDAR
