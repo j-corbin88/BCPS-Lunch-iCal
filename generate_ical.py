@@ -23,7 +23,7 @@ BREAKFAST_KEYWORDS = [
     "waffle", "pancake", "muffin", "bagel", "cereal", "oatmeal",
     "granola", "french toast", "breakfast", "biscuit", "donut",
     "pop tart", "cinnamon", "cocoa puff", "lucky charm", "cheerio",
-    "fruit juice", "juice", "yogurt", "egg"
+    "fruit juice", "juice", "yogurt", "egg", "mini cinnis"
 ]
 
 
