@@ -1,0 +1,33 @@
+name: Generate Lunch iCal
+
+on:
+  schedule:
+    - cron: "0 23 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate iCal
+        run: python generate_ical.py
+
+      - name: Commit and push updated lunch.ics
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add lunch.ics
+          git diff --cached --quiet || git commit -m "chore: update lunch menu $(date -u +'%Y-%m-%d')"
+          git push
