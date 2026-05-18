@@ -1,7 +1,7 @@
 # 🍽 BCPS Lunch Calendar
 
 Automatically fetches the weekly BCPS lunch menu from Nutrislice and generates a
-subscribable `.ics` calendar file — updated every Sunday night.
+subscribable `.ics` calendar file — updated every Sunday night. 
 
 ## Setup (one-time, ~10 minutes)
 
