@@ -15,7 +15,7 @@ DISTRICT    = "bcps"
 SCHOOL_SLUG = "bcps-weekly-menus"
 MENU_TYPE   = "weekly-menus"
 OUTPUT_FILE = "lunch.ics"
-CALENDAR_NAME = "BCPS School Lunch"
+CALENDAR_NAME = "BCPS Daily Schedule"
 WEEKS_AHEAD = 4
 # ─────────────────────────────────────────────────────────────────────────────
 
@@ -63,14 +63,11 @@ def extract_lunch_items(menu_items: list) -> list[str]:
         name = food.get("name", "").strip()
         if not name:
             continue
-        # Only grab entrees
         if food.get("food_category") != "entree":
             continue
         name_lower = name.lower()
-        # Skip obvious breakfast items
         if any(kw in name_lower for kw in BREAKFAST_KEYWORDS):
             continue
-        # Skip excluded lunch items
         if any(kw in name_lower for kw in LUNCH_EXCLUDES):
             continue
         if name not in seen:
@@ -171,11 +168,11 @@ def main():
                 continue
 
             primary = items[0]
-            summary = f"🍽 Lunch: {primary}"
+            summary = f"🍽 L: {primary}"
             if len(items) > 1:
                 summary += f" (+{len(items)-1} more)"
 
-            description = "Today's Lunch Menu:\n" + "\n".join(f"• {e}" for e in items)
+            description = "\n".join(f"• {e}" for e in items)
 
             all_events.append({
                 "date": day_date,
