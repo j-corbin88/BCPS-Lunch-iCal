@@ -23,7 +23,7 @@ BREAKFAST_KEYWORDS = [
     "waffle", "pancake", "muffin", "bagel", "cereal", "oatmeal",
     "granola", "french toast", "breakfast", "biscuit", "donut",
     "pop tart", "cinnamon", "cocoa puff", "lucky charm", "cheerio",
-    "fruit juice", "juice", "yogurt", "egg", "mini cinn"
+    "fruit juice", "juice", "yogurt", "egg"
 ]
 
 LUNCH_EXCLUDES = [
@@ -168,7 +168,7 @@ def main():
                 continue
 
             primary = items[0]
-            summary = f"🍽 L: {primary}"
+            summary = f"🍽  {primary}"
             if len(items) > 1:
                 summary += f" (+{len(items)-1} more)"
 
