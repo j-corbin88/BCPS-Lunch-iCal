@@ -21,13 +21,25 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Generate iCal
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium
+          playwright install-deps chromium
+
+      - name: Generate BCPS iCal
         run: python generate_ical.py
 
-      - name: Commit and push updated lunch.ics
+      - name: Generate Loyola iCal
+        env:
+          LUNCHTAB_EMAIL: ${{ secrets.LUNCHTAB_EMAIL }}
+          LUNCHTAB_PASSWORD: ${{ secrets.LUNCHTAB_PASSWORD }}
+        run: python generate_ical_loyola.py
+
+      - name: Commit and push updated files
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add lunch.ics
-          git diff --cached --quiet || git commit -m "chore: update lunch menu $(date -u +'%Y-%m-%d')"
+          git add lunch.ics loyola-lunch.ics
+          git diff --cached --quiet || git commit -m "chore: update menus $(date -u +'%Y-%m-%d')"
           git push
