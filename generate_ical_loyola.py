@@ -99,136 +99,54 @@ def login(page):
     print(f"  URL: {page.url}")
     page.screenshot(path="debug_01_initial.png")
 
+    # Click Blackbaud button on LunchTab login page
     print("Clicking Blackbaud button...")
-    clicked = False
-    for selector in [
-        "img[alt*='blackbaud' i]",
-        "img[src*='blackbaud' i]",
-        "button img[src*='blackbaud' i]",
-        "[class*='blackbaud']",
-        "button:has(img[src*='blackbaud' i])",
-        "a:has(img[src*='blackbaud' i])",
-    ]:
-        try:
-            el = page.locator(selector)
-            if el.count() > 0:
-                print(f"  Found Blackbaud element: {selector}")
-                el.first.click()
-                clicked = True
-                break
-        except Exception as e:
-            print(f"  Selector {selector} failed: {e}")
-            continue
-
-    if not clicked:
-        print("  Trying fallback — listing all buttons...")
-        buttons = page.locator("button").all()
-        print(f"  Found {len(buttons)} buttons")
-        for btn in buttons:
-            try:
-                txt = btn.inner_text().strip().lower()
-                print(f"    Button text: '{txt}'")
-                if "blackbaud" in txt or "sso" in txt:
-                    btn.click()
-                    clicked = True
-                    break
-            except Exception:
-                continue
-
-        if not clicked and len(buttons) >= 2:
-            print("  Last resort: clicking last button")
-            buttons[-1].click()
-            clicked = True
-
+    page.locator("button:has-text('blackbaud'), button img[alt*='blackbaud' i]").first.click()
     page.wait_for_load_state("networkidle")
     page.wait_for_timeout(3000)
     print(f"  URL after Blackbaud click: {page.url}")
     page.screenshot(path="debug_02_after_blackbaud.png")
 
-    print("Filling email on Blackbaud...")
-    for selector in [
-        "input[type='email']",
-        "input[name='email']",
-        "input[placeholder*='email' i]",
-        "input[autocomplete='email']",
-        "input[id*='email' i]",
-    ]:
-        try:
-            el = page.locator(selector)
-            if el.count() > 0:
-                print(f"  Found email input: {selector}")
-                el.first.fill(EMAIL)
-                break
-        except Exception:
-            continue
+    # On Blackbaud page — click "Continue with Email"
+    print("Clicking Continue with Email...")
+    page.locator("button:has-text('Continue with Email')").first.click()
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(2000)
+    print(f"  URL after email option: {page.url}")
+    page.screenshot(path="debug_03_email_option.png")
 
+    # Fill email
+    print("Filling email...")
+    page.locator("input[type='email'], input[name='email']").first.fill(EMAIL)
     page.wait_for_timeout(500)
 
+    # Click Continue
     print("Clicking Continue...")
-    for selector in [
-        "button:has-text('Continue')",
-        "button[type='submit']",
-        "input[type='submit']",
-    ]:
-        try:
-            el = page.locator(selector)
-            if el.count() > 0:
-                print(f"  Clicking: {selector}")
-                el.first.click()
-                page.wait_for_load_state("networkidle")
-                page.wait_for_timeout(3000)
-                break
-        except Exception:
-            continue
-
+    page.locator("button:has-text('Continue')").first.click()
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(3000)
     print(f"  URL after email submit: {page.url}")
-    page.screenshot(path="debug_03_after_email.png")
+    page.screenshot(path="debug_04_after_email.png")
 
-    print("Filling password on Blackbaud...")
-    for selector in [
-        "input[type='password']",
-        "input[name='password']",
-        "input[placeholder*='password' i]",
-        "input[id*='password' i]",
-    ]:
-        try:
-            el = page.locator(selector)
-            if el.count() > 0:
-                print(f"  Found password input: {selector}")
-                el.first.fill(PASSWORD)
-                break
-        except Exception:
-            continue
-
+    # Fill password
+    print("Filling password...")
+    page.locator("input[type='password']").first.fill(PASSWORD)
     page.wait_for_timeout(500)
 
-    print("Clicking Continue/Sign in...")
-    for selector in [
-        "button:has-text('Continue')",
-        "button:has-text('Sign in')",
-        "button:has-text('Log in')",
-        "button[type='submit']",
-        "input[type='submit']",
-    ]:
-        try:
-            el = page.locator(selector)
-            if el.count() > 0:
-                print(f"  Clicking: {selector}")
-                el.first.click()
-                page.wait_for_load_state("networkidle")
-                page.wait_for_timeout(4000)
-                break
-        except Exception:
-            continue
+    # Click Continue
+    print("Clicking Continue...")
+    page.locator("button[type='submit'], button:has-text('Continue')").first.click()
+    page.wait_for_load_state("networkidle")
+    page.wait_for_timeout(4000)
+    print(f"  URL after password: {page.url}")
+    page.screenshot(path="debug_05_after_password.png")
 
-    print(f"  URL after password submit: {page.url}")
-    page.screenshot(path="debug_04_after_password.png")
-
+    # Navigate to menu
     print("Navigating to menu page...")
     page.goto(LUNCHTAB_URL, wait_until="networkidle")
     page.wait_for_timeout(3000)
     print(f"  URL on menu page: {page.url}")
-    page.screenshot(path="debug_05_menu_page.png")
+    page.screenshot(path="debug_06_menu_page.png")
 
 
 def scrape_week(page, target_monday: date) -> list[dict]:
