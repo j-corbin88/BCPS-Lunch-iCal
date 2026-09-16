@@ -112,7 +112,11 @@ def main():
         print("Failed to fetch menus.")
         return
 
-    # Find the current/active menu
+    print(f"  Raw response type: {'dict' if isinstance(menus_data, dict) else 'list'}")
+    if isinstance(menus_data, dict):
+        print(f"  Raw response keys: {list(menus_data.keys())}")
+    print(f"  Raw response sample: {json.dumps(menus_data)[:500]}")
+
     menus = menus_data if isinstance(menus_data, list) else menus_data.get("items", menus_data.get("data", []))
     print(f"  Found {len(menus)} menus")
 
@@ -120,7 +124,6 @@ def main():
     for m in menus:
         name = m.get("name", "")
         print(f"  Menu: {name}")
-        # Pick the most recent active one
         if current_menu is None:
             current_menu = m
 
@@ -144,6 +147,11 @@ def main():
         if not data:
             print("  No data.")
             continue
+
+        print(f"  Raw response type: {'dict' if isinstance(data, dict) else 'list'}")
+        if isinstance(data, dict):
+            print(f"  Raw response keys: {list(data.keys())}")
+        print(f"  Raw response sample: {json.dumps(data)[:500]}")
 
         items = data if isinstance(data, list) else data.get("items", data.get("data", []))
         print(f"  Got {len(items)} items")
