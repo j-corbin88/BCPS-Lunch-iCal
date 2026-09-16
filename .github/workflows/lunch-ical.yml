@@ -21,27 +21,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install Playwright
-        run: |
-          pip install playwright
-          playwright install chromium
-          playwright install-deps chromium
-
       - name: Generate BCPS iCal
         run: python generate_ical.py
 
       - name: Generate Loyola iCal
         env:
-          LUNCHTAB_EMAIL: ${{ secrets.LUNCHTAB_EMAIL }}
-          LUNCHTAB_PASSWORD: ${{ secrets.LUNCHTAB_PASSWORD }}
+          LUNCHTAB_COOKIE: ${{ secrets.LUNCHTAB_COOKIE }}
         run: python generate_ical_loyola.py
-
-      - name: Upload debug screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-screenshots
-          path: "*.png"
 
       - name: Commit and push updated files
         run: |
