@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
 """
 Loyola Blakefield Lunch Menu → iCal Generator
-Uses Playwright to scrape LunchTab and writes loyola-lunch.ics
+Calls LunchTab API directly using session cookie
 """
 
 import os
-import re
+import json
 import uuid
+import urllib.request
+import urllib.error
 from datetime import datetime, date, timedelta
-from playwright.sync_api import sync_playwright
 
 # ── Configuration ────────────────────────────────────────────────────────────
-LUNCHTAB_URL   = "https://loyolablakefield.lunchtab.app/menus/1/?salesBusinessTypeName=Cafeteria"
-EMAIL          = os.environ["LUNCHTAB_EMAIL"]
-PASSWORD       = os.environ["LUNCHTAB_PASSWORD"]
+AUTH_COOKIE    = os.environ["LUNCHTAB_COOKIE"]
+BASE_URL       = "https://loyolablakefield.lunchtab.app/api/v1"
 OUTPUT_FILE    = "loyola-lunch.ics"
 CALENDAR_NAME  = "Loyola Blakefield Daily Schedule"
 WEEKS_AHEAD    = 4
@@ -22,6 +22,27 @@ WEEKS_AHEAD    = 4
 
 def get_monday(d: date) -> date:
     return d - timedelta(days=d.weekday())
+
+
+def api_get(path: str) -> dict | list | None:
+    url = f"{BASE_URL}{path}"
+    headers = {
+        "Accept": "application/json, text/plain, */*",
+        "Cookie": f"loyolablakefield__auth={AUTH_COOKIE}",
+        "Referer": "https://loyolablakefield.lunchtab.app/menus/1/?salesBusinessTypeName=Cafeteria",
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "x-csrf": "1",
+    }
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read().decode())
+    except urllib.error.HTTPError as e:
+        print(f"  HTTP {e.code} for {url}")
+        return None
+    except Exception as e:
+        print(f"  Error: {e}")
+        return None
 
 
 def ical_escape(text: str) -> str:
@@ -79,188 +100,94 @@ def build_ical(events: list[dict]) -> str:
     return "\r\n".join(lines) + "\r\n"
 
 
-def parse_date_from_heading(heading: str) -> date | None:
-    heading = re.sub(r"(\d+)(st|nd|rd|th)", r"\1", heading)
-    for fmt in ("%A %d %B %Y", "%A %d %B"):
-        try:
-            parsed = datetime.strptime(heading.strip(), fmt)
-            if fmt == "%A %d %B":
-                parsed = parsed.replace(year=date.today().year)
-            return parsed.date()
-        except ValueError:
+def main():
+    today = date.today()
+    monday = get_monday(today)
+    all_events = []
+
+    # Fetch all menus to find the current one
+    print("Fetching menu list...")
+    menus_data = api_get("/salesbusinesstypes/1/menus?pageNumber=1&pageSize=300&isPublished=true&hideFromMenuBrowsers=false")
+    if not menus_data:
+        print("Failed to fetch menus.")
+        return
+
+    # Find the current/active menu
+    menus = menus_data if isinstance(menus_data, list) else menus_data.get("items", menus_data.get("data", []))
+    print(f"  Found {len(menus)} menus")
+
+    current_menu = None
+    for m in menus:
+        name = m.get("name", "")
+        print(f"  Menu: {name}")
+        # Pick the most recent active one
+        if current_menu is None:
+            current_menu = m
+
+    if not current_menu:
+        print("No menu found.")
+        return
+
+    menu_id = current_menu.get("id")
+    print(f"Using menu: {current_menu.get('name')} (id={menu_id})")
+
+    # Fetch menu items for each week
+    for week_offset in range(WEEKS_AHEAD):
+        target_monday = monday + timedelta(weeks=week_offset)
+        target_sunday = target_monday + timedelta(days=6)
+        print(f"\nFetching week of {target_monday}...")
+
+        start = target_monday.strftime("%Y-%m-%dT00:00:00")
+        end = target_sunday.strftime("%Y-%m-%dT23:59:59")
+
+        data = api_get(f"/menus/{menu_id}/menuitems?startDateTimeUtc={start}&endDateTimeUtc={end}")
+        if not data:
+            print("  No data.")
             continue
-    return None
 
+        items = data if isinstance(data, list) else data.get("items", data.get("data", []))
+        print(f"  Got {len(items)} items")
 
-def login(page):
-    print("Navigating to LunchTab...")
-    page.goto(LUNCHTAB_URL, wait_until="networkidle")
-    page.wait_for_timeout(3000)
-    print(f"  URL: {page.url}")
-    page.screenshot(path="debug_01_initial.png")
-
-    # Click Blackbaud button on LunchTab login page
-    print("Clicking Blackbaud button...")
-    page.locator("button:has-text('blackbaud'), button img[alt*='blackbaud' i]").first.click()
-    page.wait_for_load_state("networkidle")
-    page.wait_for_timeout(3000)
-    print(f"  URL after Blackbaud click: {page.url}")
-    page.screenshot(path="debug_02_after_blackbaud.png")
-
-    # On Blackbaud page — click "Continue with Email"
-    print("Clicking Continue with Email...")
-    page.locator("button:has-text('Continue with Email')").first.click()
-    page.wait_for_load_state("networkidle")
-    page.wait_for_timeout(2000)
-    print(f"  URL after email option: {page.url}")
-    page.screenshot(path="debug_03_email_option.png")
-
-    # Fill email
-    print("Filling email...")
-    page.locator("input[type='email'], input[name='email']").first.fill(EMAIL)
-    page.wait_for_timeout(500)
-
-    # Click Continue
-    print("Clicking Continue...")
-    page.locator("button:has-text('Continue')").first.click()
-    page.wait_for_load_state("networkidle")
-    page.wait_for_timeout(3000)
-    print(f"  URL after email submit: {page.url}")
-    page.screenshot(path="debug_04_after_email.png")
-
-    # Fill password
-    print("Filling password...")
-    page.locator("input[type='password']").first.fill(PASSWORD)
-    page.wait_for_timeout(500)
-
-    # Click Continue
-    print("Clicking Continue...")
-    page.locator("button[type='submit'], button:has-text('Continue')").first.click()
-    page.wait_for_load_state("networkidle")
-    page.wait_for_timeout(4000)
-    print(f"  URL after password: {page.url}")
-    page.screenshot(path="debug_05_after_password.png")
-
-    # Navigate to menu
-    print("Navigating to menu page...")
-    page.goto(LUNCHTAB_URL, wait_until="networkidle")
-    page.wait_for_timeout(3000)
-    print(f"  URL on menu page: {page.url}")
-    page.screenshot(path="debug_06_menu_page.png")
-
-
-def scrape_week(page, target_monday: date) -> list[dict]:
-    print(f"  Setting week to {target_monday.strftime('%m/%d/%Y')}...")
-
-    try:
-        for selector in [
-            "input[type='date']",
-            "input[placeholder*='week' i]",
-            "input[placeholder*='date' i]",
-        ]:
-            if page.locator(selector).count() > 0:
-                page.locator(selector).first.fill(target_monday.strftime("%Y-%m-%d"))
-                page.keyboard.press("Enter")
-                page.wait_for_timeout(2000)
-                break
-    except Exception as e:
-        print(f"  Could not set week input: {e}")
-
-    events = []
-    headings = page.locator("text=/Monday|Tuesday|Wednesday|Thursday|Friday/").all()
-    print(f"  Found {len(headings)} day headings")
-
-    for heading_el in headings:
-        try:
-            heading_text = heading_el.inner_text().strip()
-            day_date = parse_date_from_heading(heading_text)
-            if not day_date:
-                print(f"  Could not parse date from: {heading_text}")
+        # Group by date
+        by_date = {}
+        for item in items:
+            item_date_str = item.get("dateTimeUtc", item.get("date", ""))[:10]
+            if not item_date_str:
                 continue
-
-            if day_date.weekday() >= 5:
+            try:
+                item_date = date.fromisoformat(item_date_str)
+            except ValueError:
                 continue
+            if item_date.weekday() >= 5:
+                continue
+            name = (item.get("menuItem", {}) or {}).get("name", "") or item.get("name", "")
+            if not name:
+                continue
+            by_date.setdefault(item_date, []).append(name)
 
-            card = heading_el.locator("xpath=ancestor::*[contains(@class,'card') or contains(@class,'day') or contains(@class,'week')]").last
-            if card.count() == 0:
-                card = heading_el.locator("xpath=../..")
-
-            card_text = card.inner_text()
-
-            lines = [
-                l.strip() for l in card_text.split("\n")
-                if l.strip()
-                and l.strip() != heading_text
-                and "no items" not in l.lower()
-                and len(l.strip()) > 2
-            ]
-
+        for day_date, names in sorted(by_date.items()):
             seen = set()
-            items = []
-            for line in lines:
-                if line.lower() not in seen:
-                    seen.add(line.lower())
-                    items.append(line)
+            items_deduped = []
+            for n in names:
+                if n.lower() not in seen:
+                    seen.add(n.lower())
+                    items_deduped.append(n)
 
-            if not items:
-                print(f"  {day_date}: no items")
-                continue
-
-            primary = items[0]
+            primary = items_deduped[0]
             summary = f"🎓 {primary}"
-            if len(items) > 1:
-                summary += f" (+{len(items)-1} more)"
+            if len(items_deduped) > 1:
+                summary += f" (+{len(items_deduped)-1} more)"
+            description = "\n".join(f"• {i}" for i in items_deduped)
 
-            description = "\n".join(f"• {i}" for i in items)
-
-            events.append({
+            all_events.append({
                 "date": day_date,
                 "summary": summary,
                 "description": description,
             })
-            print(f"  {day_date}: {', '.join(items)}")
-
-        except Exception as e:
-            print(f"  Error parsing day: {e}")
-            continue
-
-    return events
-
-
-def main():
-    all_events = []
-    today = date.today()
-    monday = get_monday(today)
-
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        context = browser.new_context()
-        page = context.new_page()
-
-        login(page)
-
-        print("Selecting current menu...")
-        try:
-            menu_dropdown = page.locator("select").first
-            if menu_dropdown.count() > 0:
-                options = menu_dropdown.locator("option").all()
-                option_texts = [o.inner_text() for o in options]
-                print(f"  Menu options: {option_texts}")
-                menu_dropdown.select_option(index=0)
-                page.wait_for_timeout(1500)
-        except Exception as e:
-            print(f"  Dropdown error: {e}")
-
-        for week_offset in range(WEEKS_AHEAD):
-            target_monday = monday + timedelta(weeks=week_offset)
-            print(f"\nFetching week of {target_monday}...")
-            events = scrape_week(page, target_monday)
-            all_events.extend(events)
-
-        browser.close()
+            print(f"  {day_date}: {', '.join(items_deduped)}")
 
     if not all_events:
-        print("No menu events found.")
+        print("No events found.")
         return
 
     ical_content = build_ical(all_events)
