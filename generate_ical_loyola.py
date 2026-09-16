@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Loyola Blakefield Lunch Menu → iCal Generator
+Loyola Blakefield Lunch Menu -> iCal Generator
 Calls LunchTab API directly using session cookie
 """
 
@@ -11,20 +11,21 @@ import urllib.request
 import urllib.error
 from datetime import datetime, date, timedelta
 
-# ── Configuration ────────────────────────────────────────────────────────────
-AUTH_COOKIE    = os.environ["LUNCHTAB_COOKIE"]
-BASE_URL       = "https://loyolablakefield.lunchtab.app/api/v1"
-OUTPUT_FILE    = "loyola-lunch.ics"
-CALENDAR_NAME  = "Loyola Blakefield Daily Schedule"
-WEEKS_AHEAD    = 4
-# ─────────────────────────────────────────────────────────────────────────────
+# Configuration
+AUTH_COOKIE   = os.environ["LUNCHTAB_COOKIE"]
+BASE_URL      = "https://loyolablakefield.lunchtab.app/api/v1"
+OUTPUT_FILE   = "loyola-lunch.ics"
+CALENDAR_NAME = "Loyola Blakefield Daily Schedule"
+WEEKS_AHEAD   = 4
+# Sales business type id (1 = Cafeteria)
+SBT_ID        = 1
 
 
-def get_monday(d: date) -> date:
+def get_monday(d):
     return d - timedelta(days=d.weekday())
 
 
-def api_get(path: str) -> dict | list | None:
+def api_get(path):
     url = f"{BASE_URL}{path}"
     headers = {
         "Accept": "application/json, text/plain, */*",
@@ -50,7 +51,7 @@ def api_get(path: str) -> dict | list | None:
         return None
 
 
-def unwrap(data) -> list:
+def unwrap(data):
     if isinstance(data, list):
         return data
     if isinstance(data, dict):
@@ -67,59 +68,7 @@ def unwrap(data) -> list:
     return []
 
 
-def sort_menus_by_relevance(menus: list) -> list:
-    """Sort menus so the most likely current one comes first."""
-    today = date.today()
-    year = today.year
-    month = today.month
-
-    if month >= 8:
-        preferred = [f"fall menu {year}", f"fall {year}"]
-    elif month >= 3:
-        preferred = [f"spring {year}", f"spring menu {year}"]
-    else:
-        preferred = [f"winter menu {year-1}-{year}", f"winter {year-1}-{year}"]
-
-    print(f"  Preferred menu keywords: {preferred}")
-
-    def score(m):
-        name = m.get("name", "").lower()
-        for i, pref in enumerate(preferred):
-            if pref in name:
-                return i
-        # Fall back to highest id (most recently added)
-        return 100 - m.get("id", 0)
-
-    return sorted(menus, key=score)
-
-
-def fetch_week_items(menu_id: int, target_monday: date) -> list:
-    """Try to fetch menu items for a given week and menu id."""
-    target_sunday = target_monday + timedelta(days=6)
-    start = target_monday.strftime("%Y-%m-%dT00:00:00")
-    end = target_sunday.strftime("%Y-%m-%dT23:59:59")
-
-    endpoints = [
-        f"/menus/{menu_id}/menuitems?startDateTimeUtc={start}&endDateTimeUtc={end}",
-        f"/salesbusinesstypes/1/menus/{menu_id}/menuitems?startDateTimeUtc={start}&endDateTimeUtc={end}",
-        f"/menus/{menu_id}/2?startDateTimeUtc={start}&endDateTimeUtc={end}",
-    ]
-
-    for ep in endpoints:
-        print(f"  Trying endpoint: {ep[:80]}...")
-        data = api_get(ep)
-        if data:
-            items = unwrap(data)
-            if items:
-                print(f"  Got {len(items)} items")
-                return items
-            else:
-                print(f"  Raw sample: {json.dumps(data)[:300]}")
-
-    return []
-
-
-def ical_escape(text: str) -> str:
+def ical_escape(text):
     return (text
         .replace("\\", "\\\\")
         .replace(";", "\\;")
@@ -127,7 +76,7 @@ def ical_escape(text: str) -> str:
         .replace("\n", "\\n"))
 
 
-def fold(line: str) -> str:
+def fold(line):
     encoded = line.encode("utf-8")
     if len(encoded) <= 75:
         return line
@@ -140,7 +89,7 @@ def fold(line: str) -> str:
     return "\r\n ".join(result)
 
 
-def build_ical(events: list[dict]) -> str:
+def build_ical(events):
     now_str = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
     lines = [
         "BEGIN:VCALENDAR",
@@ -158,20 +107,35 @@ def build_ical(events: list[dict]) -> str:
         description = ical_escape(ev["description"])
         uid = str(uuid.uuid5(uuid.NAMESPACE_DNS, f"loyola-lunch-{ev['date'].isoformat()}"))
 
-        lines += [
-            "BEGIN:VEVENT",
-            f"UID:{uid}",
-            f"DTSTAMP:{now_str}",
-            f"DTSTART;VALUE=DATE:{date_str}",
-            f"DTEND;VALUE=DATE:{date_str}",
-            fold(f"SUMMARY:{summary}"),
-            fold(f"DESCRIPTION:{description}"),
-            "TRANSP:TRANSPARENT",
-            "END:VEVENT",
-        ]
+        lines.append("BEGIN:VEVENT")
+        lines.append(f"UID:{uid}")
+        lines.append(f"DTSTAMP:{now_str}")
+        lines.append(f"DTSTART;VALUE=DATE:{date_str}")
+        lines.append(f"DTEND;VALUE=DATE:{date_str}")
+        lines.append(fold(f"SUMMARY:{summary}"))
+        lines.append(fold(f"DESCRIPTION:{description}"))
+        lines.append("TRANSP:TRANSPARENT")
+        lines.append("END:VEVENT")
 
     lines.append("END:VCALENDAR")
     return "\r\n".join(lines) + "\r\n"
+
+
+def fetch_week(target_monday):
+    # Dates in UTC with Eastern offset (UTC-4 in summer, UTC-5 in winter)
+    # Use T04:00:00.000Z (EDT) as the site does
+    start = target_monday.strftime("%Y-%m-%dT04:00:00.000Z")
+    end_day = target_monday + timedelta(days=6)
+    end = end_day.strftime("%Y-%m-%dT03:59:59.999Z")
+
+    path = f"/salesbusinesstypes/{SBT_ID}/menubrowserweeks/2?startDateTimeUtc={start}&endDateTimeUtc={end}"
+    print(f"  Fetching: {path[:100]}...")
+    data = api_get(path)
+    if not data:
+        return []
+
+    print(f"  Raw sample: {json.dumps(data)[:400]}")
+    return unwrap(data)
 
 
 def main():
@@ -179,46 +143,24 @@ def main():
     monday = get_monday(today)
     all_events = []
 
-    # Fetch all menus
-    print("Fetching menu list...")
-    menus_data = api_get("/salesbusinesstypes/1/menus?pageNumber=1&pageSize=300&isPublished=true&hideFromMenuBrowsers=false")
-    if not menus_data:
-        print("Failed to fetch menus.")
-        return
-
-    menus = unwrap(menus_data)
-    print(f"  Found {len(menus)} menus")
-    for m in menus:
-        print(f"  Menu: {m.get('name')} (id={m.get('id')})")
-
-    sorted_menus = sort_menus_by_relevance(menus)
-
-    # Try each week, falling back through menus if needed
     for week_offset in range(WEEKS_AHEAD):
         target_monday = monday + timedelta(weeks=week_offset)
         print(f"\nFetching week of {target_monday}...")
 
-        items = []
-        used_menu = None
-
-        for menu in sorted_menus:
-            menu_id = menu.get("id")
-            menu_name = menu.get("name")
-            print(f"  Trying menu: {menu_name} (id={menu_id})")
-            items = fetch_week_items(menu_id, target_monday)
-            if items:
-                used_menu = menu_name
-                break
+        items = fetch_week(target_monday)
+        print(f"  Got {len(items)} items")
 
         if not items:
-            print(f"  No items found for week of {target_monday} in any menu")
             continue
-
-        print(f"  Using menu: {used_menu}")
 
         by_date = {}
         for item in items:
-            item_date_str = item.get("dateTimeUtc", item.get("date", ""))[:10]
+            # Try various date field names
+            item_date_str = (
+                item.get("dateTimeUtc", "")
+                or item.get("date", "")
+                or item.get("menuDate", "")
+            )[:10]
             if not item_date_str:
                 continue
             try:
@@ -227,9 +169,16 @@ def main():
                 continue
             if item_date.weekday() >= 5:
                 continue
-            name = (item.get("menuItem", {}) or {}).get("name", "") or item.get("name", "")
+
+            # Try various name field paths
+            name = ""
+            if item.get("menuItem"):
+                name = item["menuItem"].get("name", "")
+            if not name:
+                name = item.get("name", "") or item.get("itemName", "")
             if not name:
                 continue
+
             by_date.setdefault(item_date, []).append(name)
 
         for day_date, names in sorted(by_date.items()):
@@ -241,10 +190,10 @@ def main():
                     items_deduped.append(n)
 
             primary = items_deduped[0]
-            summary = f"🎓 {primary}"
+            summary = f"Loyola: {primary}"
             if len(items_deduped) > 1:
                 summary += f" (+{len(items_deduped)-1} more)"
-            description = "\n".join(f"• {i}" for i in items_deduped)
+            description = "\n".join(f"- {i}" for i in items_deduped)
 
             all_events.append({
                 "date": day_date,
@@ -261,7 +210,7 @@ def main():
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(ical_content)
 
-    print(f"\n✅ Written {len(all_events)} events to {OUTPUT_FILE}")
+    print(f"\nWritten {len(all_events)} events to {OUTPUT_FILE}")
 
 
 if __name__ == "__main__":
