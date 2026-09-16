@@ -45,6 +45,24 @@ def api_get(path: str) -> dict | list | None:
         return None
 
 
+def unwrap(data) -> list:
+    """Extract the list from LunchTab's nested response envelope."""
+    if isinstance(data, list):
+        return data
+    if isinstance(data, dict):
+        ro = data.get("responseObject", {})
+        if isinstance(ro, list):
+            return ro
+        if isinstance(ro, dict):
+            for key in ("response", "items", "data"):
+                if key in ro and isinstance(ro[key], list):
+                    return ro[key]
+        for key in ("response", "items", "data"):
+            if key in data and isinstance(data[key], list):
+                return data[key]
+    return []
+
+
 def ical_escape(text: str) -> str:
     return (text
         .replace("\\", "\\\\")
@@ -105,28 +123,21 @@ def main():
     monday = get_monday(today)
     all_events = []
 
-    # Fetch all menus to find the current one
+    # Fetch all menus
     print("Fetching menu list...")
     menus_data = api_get("/salesbusinesstypes/1/menus?pageNumber=1&pageSize=300&isPublished=true&hideFromMenuBrowsers=false")
     if not menus_data:
         print("Failed to fetch menus.")
         return
 
-    print(f"  Raw response type: {'dict' if isinstance(menus_data, dict) else 'list'}")
-    if isinstance(menus_data, dict):
-        print(f"  Raw response keys: {list(menus_data.keys())}")
-    print(f"  Raw response sample: {json.dumps(menus_data)[:500]}")
-
-    menus = menus_data if isinstance(menus_data, list) else menus_data.get("items", menus_data.get("data", []))
+    menus = unwrap(menus_data)
     print(f"  Found {len(menus)} menus")
 
-    current_menu = None
     for m in menus:
-        name = m.get("name", "")
-        print(f"  Menu: {name}")
-        if current_menu is None:
-            current_menu = m
+        print(f"  Menu: {m.get('name')} (id={m.get('id')})")
 
+    # Pick the first published menu (most current)
+    current_menu = menus[0] if menus else None
     if not current_menu:
         print("No menu found.")
         return
@@ -148,12 +159,9 @@ def main():
             print("  No data.")
             continue
 
-        print(f"  Raw response type: {'dict' if isinstance(data, dict) else 'list'}")
-        if isinstance(data, dict):
-            print(f"  Raw response keys: {list(data.keys())}")
-        print(f"  Raw response sample: {json.dumps(data)[:500]}")
+        print(f"  Raw sample: {json.dumps(data)[:300]}")
 
-        items = data if isinstance(data, list) else data.get("items", data.get("data", []))
+        items = unwrap(data)
         print(f"  Got {len(items)} items")
 
         # Group by date
