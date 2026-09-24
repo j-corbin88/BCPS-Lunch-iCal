@@ -1,0 +1,195 @@
+#!/usr/bin/env python3
+"""
+Cole's Loyola Calendar Splitter
+Fetches two iCal feeds and splits into:
+- cole-classes.ics: daily class periods
+- cole-assignments.ics: homework, quizzes, tests (no participation)
+- loyola-activities.ics: school-wide activities and events
+"""
+
+import uuid
+import re
+import urllib.request
+from datetime import datetime, date
+
+COLE_URL       = "https://loyolablakefield.myschoolapp.com/podium/feed/iCal.aspx?z=k6iFwgj9%2fEhEfcHbQ22wmoztitIrCRWyqm3Zq3cJiA0HYpbk5UEaR%2b1DMmp%2fNwzfWse9IV6dQly4TXEzoMlDmA%3d%3d"
+LOYOLA_URL     = "https://loyolablakefield.myschoolapp.com/podium/feed/iCal.aspx?z=4v3FTQSOQLhVE7HULRWuIlXF7Qq8mOIyhBfETVEyH4I%2fodvKb2dTEnQjMZnc75Pi%2b7yRatmAORt2Q6P3dPtmVA%3d%3d"
+
+OUTPUT_CLASSES     = "cole-classes.ics"
+OUTPUT_ASSIGNMENTS = "cole-assignments.ics"
+OUTPUT_ACTIVITIES  = "loyola-activities.ics"
+
+PARTICIPATION_KEYWORDS = [
+    "participation",
+    "class participation",
+    "quarter participation",
+]
+
+DAY_LABEL_KEYWORDS = [
+    "a day", "b day", "c day", "d day", "e day",
+    "late start", "no school", "holiday",
+]
+
+
+def fetch_ical(url):
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        return resp.read().decode("utf-8", errors="replace")
+
+
+def parse_events(ical_text):
+    """Parse raw iCal text into a list of event dicts."""
+    events = []
+    current = {}
+    in_event = False
+    current_key = None
+    current_val = ""
+
+    for line in ical_text.splitlines():
+        if line.startswith((" ", "\t")) and current_key:
+            current_val += line[1:]
+            continue
+
+        if current_key and in_event:
+            current[current_key] = current_val
+
+        if line == "BEGIN:VEVENT":
+            in_event = True
+            current = {}
+            current_key = None
+            current_val = ""
+        elif line == "END:VEVENT":
+            if current_key:
+                current[current_key] = current_val
+            in_event = False
+            events.append(current)
+            current = {}
+            current_key = None
+            current_val = ""
+        elif in_event and ":" in line:
+            idx = line.index(":")
+            current_key = line[:idx].split(";")[0].upper()
+            current_val = line[idx+1:]
+        else:
+            current_key = None
+            current_val = ""
+
+    return events
+
+
+def is_all_day(event):
+    dtstart = event.get("DTSTART", "")
+    return "T" not in dtstart
+
+
+def shorten_title(title):
+    """
+    Convert 'English Language Arts 6 - ENGL 631 - 7: Assignment Name'
+    to 'ENGL: Assignment Name'
+    Also handles titles without the pattern — returns as-is.
+    """
+    # Pattern: anything - CODE digits - digits: assignment
+    match = re.match(r"^.+?-\s*([A-Z]+)\s*\d+\s*-\s*\d+\s*:\s*(.+)$", title)
+    if match:
+        code = match.group(1)
+        assignment = match.group(2).strip()
+        return f"{code}: {assignment}"
+
+    # Pattern without section number: anything - CODE digits: assignment
+    match = re.match(r"^.+?-\s*([A-Z]+)\s*\d+\s*:\s*(.+)$", title)
+    if match:
+        code = match.group(1)
+        assignment = match.group(2).strip()
+        return f"{code}: {assignment}"
+
+    return title
+
+
+def make_ical(events, cal_name):
+    """Build an iCal string from a list of parsed event dicts."""
+    now_str = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
+    lines = [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        f"PRODID:-//Cole Loyola {cal_name}//EN",
+        f"X-WR-CALNAME:{cal_name}",
+        "X-WR-TIMEZONE:America/New_York",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+    ]
+
+    for ev in events:
+        lines.append("BEGIN:VEVENT")
+        for key, val in ev.items():
+            lines.append(f"{key}:{val}")
+        if "UID" not in ev:
+            lines.append(f"UID:{uuid.uuid4()}@cole-loyola")
+        lines.append("END:VEVENT")
+
+    lines.append("END:VCALENDAR")
+    return "\r\n".join(lines) + "\r\n"
+
+
+def main():
+    print("Fetching Cole's calendar...")
+    cole_ical = fetch_ical(COLE_URL)
+    cole_events = parse_events(cole_ical)
+    print(f"  Parsed {len(cole_events)} events")
+
+    print("Fetching Loyola activities calendar...")
+    loyola_ical = fetch_ical(LOYOLA_URL)
+    loyola_events = parse_events(loyola_ical)
+    print(f"  Parsed {len(loyola_events)} events")
+
+    classes = []
+    assignments = []
+
+    for ev in cole_events:
+        title = ev.get("SUMMARY", "")
+        title_lower = title.lower()
+
+        # Skip participation
+        if any(kw in title_lower for kw in PARTICIPATION_KEYWORDS):
+            print(f"  Skipping participation: {title}")
+            continue
+
+        if not is_all_day(ev):
+            # Timed = class period, keep as-is
+            classes.append(ev)
+        else:
+            # Skip day labels
+            if any(kw in title_lower for kw in DAY_LABEL_KEYWORDS):
+                print(f"  Skipping day label: {title}")
+                continue
+
+            # Shorten the title
+            ev["SUMMARY"] = shorten_title(title)
+            assignments.append(ev)
+
+    # Filter Loyola activities
+    activities = []
+    for ev in loyola_events:
+        title_lower = ev.get("SUMMARY", "").lower()
+        if any(kw in title_lower for kw in PARTICIPATION_KEYWORDS):
+            continue
+        activities.append(ev)
+
+    print(f"\nClasses: {len(classes)} events")
+    print(f"Assignments: {len(assignments)} events")
+    print(f"Activities: {len(activities)} events")
+
+    with open(OUTPUT_CLASSES, "w", encoding="utf-8") as f:
+        f.write(make_ical(classes, "Cole's Class Schedule"))
+    print(f"Written {OUTPUT_CLASSES}")
+
+    with open(OUTPUT_ASSIGNMENTS, "w", encoding="utf-8") as f:
+        f.write(make_ical(assignments, "Cole's Assignments"))
+    print(f"Written {OUTPUT_ASSIGNMENTS}")
+
+    with open(OUTPUT_ACTIVITIES, "w", encoding="utf-8") as f:
+        f.write(make_ical(activities, "Loyola Activities"))
+    print(f"Written {OUTPUT_ACTIVITIES}")
+
+
+if __name__ == "__main__":
+    main()
