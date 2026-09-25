@@ -1,4 +1,3 @@
-```python
 #!/usr/bin/env python3
 """
 Cole's Loyola Calendar Splitter
