@@ -1,3 +1,4 @@
+```python
 #!/usr/bin/env python3
 """
 Cole's Loyola Calendar Splitter
@@ -10,7 +11,7 @@ Fetches two iCal feeds and splits into:
 import uuid
 import re
 import urllib.request
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 COLE_URL       = "https://loyolablakefield.myschoolapp.com/podium/feed/iCal.aspx?z=k6iFwgj9%2fEhEfcHbQ22wmoztitIrCRWyqm3Zq3cJiA0HYpbk5UEaR%2b1DMmp%2fNwzfWse9IV6dQly4TXEzoMlDmA%3d%3d"
 LOYOLA_URL     = "https://loyolablakefield.myschoolapp.com/podium/feed/iCal.aspx?z=4v3FTQSOQLhVE7HULRWuIlXF7Qq8mOIyhBfETVEyH4I%2fodvKb2dTEnQjMZnc75Pi%2b7yRatmAORt2Q6P3dPtmVA%3d%3d"
@@ -38,7 +39,6 @@ def fetch_ical(url):
 
 
 def parse_events(ical_text):
-    """Parse raw iCal text into a list of event dicts."""
     events = []
     current = {}
     in_event = False
@@ -82,31 +82,42 @@ def is_all_day(event):
     return "T" not in dtstart
 
 
+def collapse_to_due_date(event):
+    dtstart = event.get("DTSTART", "")
+    dtend = event.get("DTEND", "")
+
+    if not dtstart or not dtend or "T" in dtstart:
+        return event
+
+    try:
+        start = date.fromisoformat(dtstart[:8])
+        end = date.fromisoformat(dtend[:8])
+    except ValueError:
+        return event
+
+    if (end - start).days > 1:
+        due = end.strftime("%Y%m%d")
+        next_day = (end + timedelta(days=1)).strftime("%Y%m%d")
+        event["DTSTART"] = due
+        event["DTEND"] = next_day
+        print(f"  Collapsed to due date {due}: {event.get('SUMMARY', '')}")
+
+    return event
+
+
 def shorten_title(title):
-    """
-    Convert 'English Language Arts 6 - ENGL 631 - 7: Assignment Name'
-    to 'ENGL: Assignment Name'
-    Also handles titles without the pattern — returns as-is.
-    """
-    # Pattern: anything - CODE digits - digits: assignment
     match = re.match(r"^.+?-\s*([A-Z]+)\s*\d+\s*-\s*\d+\s*:\s*(.+)$", title)
     if match:
-        code = match.group(1)
-        assignment = match.group(2).strip()
-        return f"{code}: {assignment}"
+        return f"{match.group(1)}: {match.group(2).strip()}"
 
-    # Pattern without section number: anything - CODE digits: assignment
     match = re.match(r"^.+?-\s*([A-Z]+)\s*\d+\s*:\s*(.+)$", title)
     if match:
-        code = match.group(1)
-        assignment = match.group(2).strip()
-        return f"{code}: {assignment}"
+        return f"{match.group(1)}: {match.group(2).strip()}"
 
     return title
 
 
 def make_ical(events, cal_name):
-    """Build an iCal string from a list of parsed event dicts."""
     now_str = datetime.utcnow().strftime("%Y%m%dT%H%M%SZ")
     lines = [
         "BEGIN:VCALENDAR",
@@ -148,25 +159,21 @@ def main():
         title = ev.get("SUMMARY", "")
         title_lower = title.lower()
 
-        # Skip participation
         if any(kw in title_lower for kw in PARTICIPATION_KEYWORDS):
             print(f"  Skipping participation: {title}")
             continue
 
         if not is_all_day(ev):
-            # Timed = class period, keep as-is
             classes.append(ev)
         else:
-            # Skip day labels
             if any(kw in title_lower for kw in DAY_LABEL_KEYWORDS):
                 print(f"  Skipping day label: {title}")
                 continue
 
-            # Shorten the title
+            ev = collapse_to_due_date(ev)
             ev["SUMMARY"] = shorten_title(title)
             assignments.append(ev)
 
-    # Filter Loyola activities
     activities = []
     for ev in loyola_events:
         title_lower = ev.get("SUMMARY", "").lower()
