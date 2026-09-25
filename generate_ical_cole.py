@@ -95,8 +95,9 @@ def collapse_to_due_date(event):
         return event
 
     if (end - start).days > 1:
-        due = end.strftime("%Y%m%d")
-        next_day = (end + timedelta(days=1)).strftime("%Y%m%d")
+        # DTEND is exclusive in iCal, so actual last day is end - 1
+        due = (end - timedelta(days=1)).strftime("%Y%m%d")
+        next_day = end.strftime("%Y%m%d")
         event["DTSTART"] = due
         event["DTEND"] = next_day
         print(f"  Collapsed to due date {due}: {event.get('SUMMARY', '')}")
