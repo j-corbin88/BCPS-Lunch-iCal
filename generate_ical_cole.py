@@ -27,7 +27,50 @@ PARTICIPATION_KEYWORDS = [
 
 DAY_LABEL_KEYWORDS = [
     "a day", "b day", "c day", "d day", "e day",
-    "late start", "no school", "holiday",
+    "late start",
+]
+
+REMOVE_SPORT_LEVELS = [
+    "middle school",
+    "junior varsity",
+    "freshman",
+    " jv ",
+]
+
+REMOVE_SPORTS = [
+    "water polo",
+    "cross country",
+]
+
+REMOVE_NOISE_KEYWORDS = [
+    "total # of student days",
+    "q1 grades due",
+    "q2 grades due",
+    "q3 grades due",
+    "q4 grades due",
+    "report cards go live",
+    "conference site",
+    "department chair",
+    "professional development",
+    "grades due",
+    "end date to drop",
+    "drop down",
+    "paying for college",
+    "aims ",
+    "don for a day",
+]
+
+REMOVE_SENIOR_KEYWORDS = [
+    "senior prom",
+    "senior trip",
+    "senior exam",
+    "senior grades",
+    "senior mother",
+    "baccalaureate",
+    "graduation rehearsal",
+    "graduation",
+    "50th reunion",
+    "senior prom experience",
 ]
 
 
@@ -95,7 +138,6 @@ def collapse_to_due_date(event):
         return event
 
     if (end - start).days > 1:
-        # DTEND is exclusive in iCal, so actual last day is end - 1
         due = (end - timedelta(days=1)).strftime("%Y%m%d")
         next_day = end.strftime("%Y%m%d")
         event["DTSTART"] = due
@@ -115,6 +157,27 @@ def shorten_title(title):
         return f"{match.group(1)}: {match.group(2).strip()}"
 
     return title
+
+
+def should_keep_activity(title):
+    t = title.lower()
+
+    if any(t == kw or t.startswith(kw + " ") for kw in DAY_LABEL_KEYWORDS):
+        return False
+
+    if any(kw in t for kw in REMOVE_SPORT_LEVELS):
+        return False
+
+    if any(kw in t for kw in REMOVE_SPORTS):
+        return False
+
+    if any(kw in t for kw in REMOVE_NOISE_KEYWORDS):
+        return False
+
+    if any(kw in t for kw in REMOVE_SENIOR_KEYWORDS):
+        return False
+
+    return True
 
 
 def make_ical(events, cal_name):
@@ -176,8 +239,11 @@ def main():
 
     activities = []
     for ev in loyola_events:
-        title_lower = ev.get("SUMMARY", "").lower()
-        if any(kw in title_lower for kw in PARTICIPATION_KEYWORDS):
+        title = ev.get("SUMMARY", "").strip()
+        if any(kw in title.lower() for kw in PARTICIPATION_KEYWORDS):
+            continue
+        if not should_keep_activity(title):
+            print(f"  Removing: {title}")
             continue
         activities.append(ev)
 
