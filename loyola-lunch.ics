@@ -6,44 +6,54 @@ X-WR-TIMEZONE:America/New_York
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:795694d2-a05e-5f5f-8eb0-f31fd94f8f31
-DTSTAMP:20260925T002602Z
-DTSTART;VALUE=DATE:20260921
-DTEND;VALUE=DATE:20260921
-SUMMARY:Loyola: 6 PC. Chicken Nugget (+5 more)
-DESCRIPTION:- 6 PC. Chicken Nugget\n- Chicken Sandwich with SAGE Fillet Sau
- ce\n- Seafood Salad Sandwich\n- Pepperoni Pizza\n- Tortellini with Marinara
- \n- Build Your Own Pasta Bowl
+UID:077a0f40-be2e-5a2d-bb7a-31484ae2e8e6
+DTSTAMP:20260928T110843Z
+DTSTART;VALUE=DATE:20260928
+DTEND;VALUE=DATE:20260928
+SUMMARY:Loyola: Chicken Tenders (+5 more)
+DESCRIPTION:- Chicken Tenders\n- Hungryman Combo\n- Pesto Tortellini\n- Ita
+ lian Sub Pizza\n- Build Your Own Pasta Bowl\n- Pepperoni Pizza Pretzels
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:0268b371-77ae-516e-8ea7-9fdf40aabc6b
-DTSTAMP:20260925T002602Z
-DTSTART;VALUE=DATE:20260922
-DTEND;VALUE=DATE:20260922
-SUMMARY:Loyola: Snack Wraps (+4 more)
-DESCRIPTION:- Snack Wraps\n- Sweet Chili Chicken\n- Vegetable Pizza\n- Chic
- ken Florentine Pasta\n- Pit Beef
+UID:0c217f6b-7bf3-5b61-a553-3b455798e4ec
+DTSTAMP:20260928T110843Z
+DTSTART;VALUE=DATE:20260929
+DTEND;VALUE=DATE:20260929
+SUMMARY:Loyola: French Dip (+5 more)
+DESCRIPTION:- French Dip\n- Bang Bang Chicken Pizza\n- Mozzarella Sticks wi
+ th Marinara Sauce\n- Smoked Apricot-BBQ Chicken Thigh\n- Macaroni and Chees
+ e Side\n- Snack Wraps
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:79f66e46-2fc7-5d68-a05e-e0e7ee9120d8
-DTSTAMP:20260925T002602Z
-DTSTART;VALUE=DATE:20260923
-DTEND;VALUE=DATE:20260923
-SUMMARY:Loyola: Mozzarella Sticks with Marinara Sauce (+4 more)
-DESCRIPTION:- Mozzarella Sticks with Marinara Sauce\n- Wings\n- Sausage Piz
- za\n- Pasta Primavera\n- Egg Roll in a Bowl
+UID:97421deb-46e3-5065-9107-30040e4c10cc
+DTSTAMP:20260928T110843Z
+DTSTART;VALUE=DATE:20260930
+DTEND;VALUE=DATE:20260930
+SUMMARY:Loyola: Maryland Crab Cake Sandwich (+5 more)
+DESCRIPTION:- Maryland Crab Cake Sandwich\n- Mac and Cheese Bar\n- Chicken 
+ Parmesan Pizza\n- Pasta Primavera\n- Tandoori Chicken\n- Tandoori Tofu
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:6ffa4644-2885-59a9-a992-7e87374a6543
-DTSTAMP:20260925T002602Z
-DTSTART;VALUE=DATE:20260924
-DTEND;VALUE=DATE:20260924
-SUMMARY:Loyola: Snack Cheeseburger (+4 more)
-DESCRIPTION:- Snack Cheeseburger\n- Don's Spicy Buff Wrap Station\n- Meat L
- over's Pizza\n- Chicken Parm Sub\n- Sweet & Spicy Smoked Chicken Thighs
+UID:ff5dbb79-8edb-5b8b-8b55-f815b1f85d95
+DTSTAMP:20260928T110843Z
+DTSTART;VALUE=DATE:20261001
+DTEND;VALUE=DATE:20261001
+SUMMARY:Loyola: Don's Spicy Buff Wrap Station (+4 more)
+DESCRIPTION:- Don's Spicy Buff Wrap Station\n- Vegetable Pizza\n- Meatball 
+ Sub - Mangia\n- Marinated Grilled Flank Steak Combo\n- Snack Cheeseburger
+TRANSP:TRANSPARENT
+END:VEVENT
+BEGIN:VEVENT
+UID:b72ada40-9361-5e9e-bb08-e6907318e4ae
+DTSTAMP:20260928T110843Z
+DTSTART;VALUE=DATE:20261002
+DTEND;VALUE=DATE:20261002
+SUMMARY:Loyola: Fried Chicken Sandwich (+3 more)
+DESCRIPTION:- Fried Chicken Sandwich\n- Pepperoni Pizza Pretzels\n- Pesto a
+ nd Pierogi Pizza\n- Smoked Rib Platter
 TRANSP:TRANSPARENT
 END:VEVENT
 END:VCALENDAR
