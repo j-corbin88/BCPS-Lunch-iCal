@@ -2,7 +2,7 @@ name: Generate Lunch iCal
 
 on:
   schedule:
-    - cron: "0 23 * * 0"
+    - cron: "0 21 * * *"
   workflow_dispatch:
 
 permissions:
@@ -34,8 +34,10 @@ jobs:
 
       - name: Commit and push updated files
         run: |
-          git config user.name  "github-actions[bot]"
+          git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add lunch.ics loyola-lunch.ics cole-classes.ics cole-assignments.ics loyola-activities.ics
+          for f in lunch.ics loyola-lunch.ics cole-classes.ics cole-assignments.ics loyola-activities.ics; do
+            [ -f "$f" ] && git add "$f"
+          done
           git diff --cached --quiet || git commit -m "chore: update calendars $(date -u +'%Y-%m-%d')"
           git push
