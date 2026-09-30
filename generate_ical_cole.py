@@ -159,6 +159,13 @@ def shorten_title(title):
     return title
 
 
+def is_participation(event):
+    title_lower = event.get("SUMMARY", "").lower()
+    desc_lower = event.get("DESCRIPTION", "").lower()
+    return any(kw in title_lower for kw in PARTICIPATION_KEYWORDS) or \
+           any(kw in desc_lower for kw in PARTICIPATION_KEYWORDS)
+
+
 def should_keep_activity(title):
     t = title.lower()
 
@@ -222,7 +229,7 @@ def main():
         title = ev.get("SUMMARY", "")
         title_lower = title.lower()
 
-        if any(kw in title_lower for kw in PARTICIPATION_KEYWORDS):
+        if is_participation(ev):
             print(f"  Skipping participation: {title}")
             continue
 
@@ -240,7 +247,7 @@ def main():
     activities = []
     for ev in loyola_events:
         title = ev.get("SUMMARY", "").strip()
-        if any(kw in title.lower() for kw in PARTICIPATION_KEYWORDS):
+        if is_participation(ev):
             continue
         if not should_keep_activity(title):
             print(f"  Removing: {title}")
