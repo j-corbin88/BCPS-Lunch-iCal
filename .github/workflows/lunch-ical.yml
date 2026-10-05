@@ -2,7 +2,9 @@ name: Generate Lunch iCal
 
 on:
   schedule:
-    - cron: "0 21 * * *"
+    - cron: "0 21 * * 0"   # Sunday 5 PM ET
+    - cron: "0 12 * * 1"   # Monday 8 AM ET
+    - cron: "0 21 * * 1"   # Monday 5 PM ET
   workflow_dispatch:
 
 permissions:
