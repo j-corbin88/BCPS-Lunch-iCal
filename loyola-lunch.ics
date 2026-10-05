@@ -6,56 +6,53 @@ X-WR-TIMEZONE:America/New_York
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:077a0f40-be2e-5a2d-bb7a-31484ae2e8e6
-DTSTAMP:20261004T234720Z
-DTSTART;VALUE=DATE:20260928
-DTEND;VALUE=DATE:20260928
-SUMMARY:Loyola: Bacon Egg Cheese Eggrolls (+6 more)
-DESCRIPTION:- Bacon Egg Cheese Eggrolls\n- Chicken Tenders\n- Hungryman Com
- bo\n- Pesto Tortellini\n- Italian Sub Pizza\n- Build Your Own Pasta Bowl\n-
-  Pepperoni Pizza Pretzels
+UID:f7821433-24ba-5cd6-8cd2-65eac71ed7ab
+DTSTAMP:20261005T160939Z
+DTSTART;VALUE=DATE:20261005
+DTEND;VALUE=DATE:20261005
+SUMMARY:Loyola: Chicken Nugget Combo (+3 more)
+DESCRIPTION:- Chicken Nugget Combo\n- Pepperoni Pizza\n- Pasta Alfredo\n- T
+ ortellini Bar
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:0c217f6b-7bf3-5b61-a553-3b455798e4ec
-DTSTAMP:20261004T234720Z
-DTSTART;VALUE=DATE:20260929
-DTEND;VALUE=DATE:20260929
-SUMMARY:Loyola: French Dip (+5 more)
-DESCRIPTION:- French Dip\n- Bang Bang Chicken Pizza\n- Mozzarella Sticks wi
- th Marinara Sauce\n- Smoked Apricot-BBQ Chicken Thigh\n- Macaroni and Chees
- e Side\n- Snack Wraps
+UID:76ff3502-ed37-5eb6-a389-4c0566afc16d
+DTSTAMP:20261005T160939Z
+DTSTART;VALUE=DATE:20261006
+DTEND;VALUE=DATE:20261006
+SUMMARY:Loyola: Snack Wraps (+5 more)
+DESCRIPTION:- Snack Wraps\n- Carolina Pulled Pork\n- Chicken Nugget Combo\n
+ - Pizza Tots\n- Chicken Tender and Bacon Pizza\n- Tortellini Bar
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:97421deb-46e3-5065-9107-30040e4c10cc
-DTSTAMP:20261004T234720Z
-DTSTART;VALUE=DATE:20260930
-DTEND;VALUE=DATE:20260930
-SUMMARY:Loyola: Buffalo Chicken Bites (+6 more)
-DESCRIPTION:- Buffalo Chicken Bites\n- Maryland Crab Cake Sandwich\n- Mac a
- nd Cheese Bar\n- Chicken Parmesan Pizza\n- Pasta Primavera\n- Tandoori Chic
- ken\n- Tandoori Tofu
+UID:a8f5558d-66cc-54ca-a8c1-d4b5b615c757
+DTSTAMP:20261005T160939Z
+DTSTART;VALUE=DATE:20261007
+DTEND;VALUE=DATE:20261007
+SUMMARY:Loyola: Loaded Fry Snack (+5 more)
+DESCRIPTION:- Loaded Fry Snack\n- Double Cheeseburger\n- Shrimp Salad Sandw
+ ich\n- Chicken Alfredo Pizza\n- Pepperoni Pizza\n- Carolina Pulled Pork
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:ff5dbb79-8edb-5b8b-8b55-f815b1f85d95
-DTSTAMP:20261004T234720Z
-DTSTART;VALUE=DATE:20261001
-DTEND;VALUE=DATE:20261001
-SUMMARY:Loyola: Soft Pretzel (+4 more)
-DESCRIPTION:- Soft Pretzel\n- Don's Spicy Buff Wrap Station\n- Vegetable Pi
- zza\n- Meatball Sub - Mangia\n- Marinated Grilled Flank Steak Combo
+UID:ec52add9-025e-5fcc-8d84-030574cbae70
+DTSTAMP:20261005T160939Z
+DTSTART;VALUE=DATE:20261008
+DTEND;VALUE=DATE:20261008
+SUMMARY:Loyola: Snack Cheeseburger (+4 more)
+DESCRIPTION:- Snack Cheeseburger\n- Don's Spicy Buff Wrap Station\n- Brusch
+ etta Pizza\n- Italian Cold Cut Sub\n- Smoked Rib Platter
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:b72ada40-9361-5e9e-bb08-e6907318e4ae
-DTSTAMP:20261004T234720Z
-DTSTART;VALUE=DATE:20261002
-DTEND;VALUE=DATE:20261002
-SUMMARY:Loyola: Fried Chicken Sandwich (+3 more)
-DESCRIPTION:- Fried Chicken Sandwich\n- Pepperoni Pizza Pretzels\n- Pesto a
- nd Pierogi Pizza\n- Smoked Rib Platter
+UID:ffee399d-cf3e-5912-865e-171eda5224b3
+DTSTAMP:20261005T160939Z
+DTSTART;VALUE=DATE:20261009
+DTEND;VALUE=DATE:20261009
+SUMMARY:Loyola: General Tso's Chicken (+4 more)
+DESCRIPTION:- General Tso's Chicken\n- Shrimp Salad Sandwich\n- Supreme Piz
+ za\n- Mozzarella Sticks with Marinara Sauce\n- Pit Beef
 TRANSP:TRANSPARENT
 END:VEVENT
 END:VCALENDAR
