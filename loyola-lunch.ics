@@ -6,53 +6,55 @@ X-WR-TIMEZONE:America/New_York
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:f7821433-24ba-5cd6-8cd2-65eac71ed7ab
-DTSTAMP:20261006T014148Z
-DTSTART;VALUE=DATE:20261005
-DTEND;VALUE=DATE:20261005
-SUMMARY:Loyola: Pepperoni Pizza Bagel (+4 more)
-DESCRIPTION:- Pepperoni Pizza Bagel\n- Chicken Nugget Combo\n- Pepperoni Pi
- zza\n- Pasta Alfredo\n- Tortellini Bar
+UID:a1252358-8849-5f7c-8ff5-c48a7c22f359
+DTSTAMP:20261012T121340Z
+DTSTART;VALUE=DATE:20261012
+DTEND;VALUE=DATE:20261012
+SUMMARY:Loyola: Chicken & Waffle Bar! (+4 more)
+DESCRIPTION:- Chicken & Waffle Bar!\n- Carolina Pulled Pork Pizza\n- Pasta 
+ and Meatballs\n- Rotisserie Seasoned Drumsticks Platter\n- Buffalo Chicken 
+ Bites
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:76ff3502-ed37-5eb6-a389-4c0566afc16d
-DTSTAMP:20261006T014148Z
-DTSTART;VALUE=DATE:20261006
-DTEND;VALUE=DATE:20261006
+UID:546ca337-738c-53ff-bb65-ec6435ee6c59
+DTSTAMP:20261012T121340Z
+DTSTART;VALUE=DATE:20261013
+DTEND;VALUE=DATE:20261013
 SUMMARY:Loyola: Snack Wraps (+4 more)
-DESCRIPTION:- Snack Wraps\n- Cheesesteak Bar\n- Pizza Tots\n- Chicken Tende
- r and Bacon Pizza\n- Carolina Pulled Pork
+DESCRIPTION:- Snack Wraps\n- Walking Tacos\n- Jerk Chicken Pizza\n- Toasted
+  Cheese Ravioli\n- Smoked Pork Plate
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:a8f5558d-66cc-54ca-a8c1-d4b5b615c757
-DTSTAMP:20261006T014148Z
-DTSTART;VALUE=DATE:20261007
-DTEND;VALUE=DATE:20261007
-SUMMARY:Loyola: Loaded Fry Snack (+5 more)
-DESCRIPTION:- Loaded Fry Snack\n- Double Cheeseburger\n- Shrimp Salad Sandw
- ich\n- Chicken Alfredo Pizza\n- Pepperoni Pizza\n- Carolina Pulled Pork
+UID:e22a4306-1b8b-5cc1-9150-f38f1c48a628
+DTSTAMP:20261012T121340Z
+DTSTART;VALUE=DATE:20261014
+DTEND;VALUE=DATE:20261014
+SUMMARY:Loyola: 6 PC. Chicken Nugget (+4 more)
+DESCRIPTION:- 6 PC. Chicken Nugget\n- Korean Rice Bowl\n- Pesto Pepperoni P
+ izza\n- Chicken Alfredo Bake\n- Chicken Tikka Masala
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:ec52add9-025e-5fcc-8d84-030574cbae70
-DTSTAMP:20261006T014148Z
-DTSTART;VALUE=DATE:20261008
-DTEND;VALUE=DATE:20261008
-SUMMARY:Loyola: Snack Cheeseburger (+4 more)
-DESCRIPTION:- Snack Cheeseburger\n- Don's Spicy Buff Wrap Station\n- Brusch
- etta Pizza\n- Italian Cold Cut Sub\n- Smoked Rib Platter
+UID:192a044e-50c2-584b-a6e9-c5fc34d09860
+DTSTAMP:20261012T121340Z
+DTSTART;VALUE=DATE:20261015
+DTEND;VALUE=DATE:20261015
+SUMMARY:Loyola: Don's Spicy Buff Wrap Station (+4 more)
+DESCRIPTION:- Don's Spicy Buff Wrap Station\n- Meatball Sub - Mangia\n- Mex
+ ican Enchilada Pizza\n- Oklahoma Smoked Pulled Pork Combo\n- Pepperoni Pizz
+ a Bagel
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
-UID:ffee399d-cf3e-5912-865e-171eda5224b3
-DTSTAMP:20261006T014148Z
-DTSTART;VALUE=DATE:20261009
-DTEND;VALUE=DATE:20261009
-SUMMARY:Loyola: General Tso's Chicken (+4 more)
-DESCRIPTION:- General Tso's Chicken\n- Shrimp Salad Sandwich\n- Supreme Piz
- za\n- Mozzarella Sticks with Marinara Sauce\n- Pit Beef
+UID:639ffa32-93cd-5243-9c1a-73f9ec2248e5
+DTSTAMP:20261012T121340Z
+DTSTART;VALUE=DATE:20261016
+DTEND;VALUE=DATE:20261016
+SUMMARY:Loyola: Taco Salad (+3 more)
+DESCRIPTION:- Taco Salad\n- Pepperoni and Jalapeño Pizza\n- Vegetable Pest
+ o  Flatbread Pizza\n- Smoked Brisket Plate
 TRANSP:TRANSPARENT
 END:VEVENT
 END:VCALENDAR
