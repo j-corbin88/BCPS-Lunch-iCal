@@ -58,6 +58,11 @@ REMOVE_NOISE_KEYWORDS = [
     "paying for college",
     "aims ",
     "don for a day",
+    "psat",
+    "sat ",
+    " sat",
+    "college visit",
+    "financial aid",
 ]
 
 REMOVE_SENIOR_KEYWORDS = [
