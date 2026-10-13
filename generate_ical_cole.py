@@ -63,6 +63,8 @@ REMOVE_NOISE_KEYWORDS = [
     " sat",
     "college visit",
     "financial aid",
+    "kairos",
+    "college admissions",
 ]
 
 REMOVE_SENIOR_KEYWORDS = [
