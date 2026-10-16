@@ -31,15 +31,12 @@ jobs:
           LUNCHTAB_COOKIE: ${{ secrets.LUNCHTAB_COOKIE }}
         run: python generate_ical_loyola.py
 
-      - name: Generate Cole Calendar Split
-        run: python generate_ical_cole.py
-
       - name: Commit and push updated files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          for f in lunch.ics loyola-lunch.ics cole-classes.ics cole-assignments.ics loyola-activities.ics; do
+          for f in lunch.ics loyola-lunch.ics; do
             [ -f "$f" ] && git add "$f"
           done
-          git diff --cached --quiet || git commit -m "chore: update calendars $(date -u +'%Y-%m-%d')"
+          git diff --cached --quiet || git commit -m "chore: update lunch calendars $(date -u +'%Y-%m-%d')"
           git push

@@ -1,0 +1,35 @@
+name: Generate Cole iCal
+
+on:
+  schedule:
+    - cron: "0 21 * * 1-5"  # Weeknights 5 PM ET (Mon-Fri)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Generate Cole Calendar Split
+        run: python generate_ical_cole.py
+
+      - name: Commit and push updated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          for f in cole-classes.ics cole-assignments.ics loyola-activities.ics; do
+            [ -f "$f" ] && git add "$f"
+          done
+          git diff --cached --quiet || git commit -m "chore: update Cole calendars $(date -u +'%Y-%m-%d')"
+          git push
