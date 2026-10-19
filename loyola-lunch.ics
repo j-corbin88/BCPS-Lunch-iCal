@@ -6,72 +6,19 @@ X-WR-TIMEZONE:America/New_York
 CALSCALE:GREGORIAN
 METHOD:PUBLISH
 BEGIN:VEVENT
-UID:a1252358-8849-5f7c-8ff5-c48a7c22f359
-DTSTAMP:20261018T225018Z
-DTSTART;VALUE=DATE:20261012
-DTEND;VALUE=DATE:20261012
-SUMMARY:Loyola: Chicken & Waffle Bar! (+4 more)
-DESCRIPTION:- Chicken & Waffle Bar!\n- Carolina Pulled Pork Pizza\n- Pasta 
- and Meatballs\n- Rotisserie Seasoned Drumsticks Platter\n- Buffalo Chicken 
- Bites
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-UID:546ca337-738c-53ff-bb65-ec6435ee6c59
-DTSTAMP:20261018T225018Z
-DTSTART;VALUE=DATE:20261013
-DTEND;VALUE=DATE:20261013
-SUMMARY:Loyola: Snack Wraps (+4 more)
-DESCRIPTION:- Snack Wraps\n- Remoulade Shrimp Wrap\n- Smash Burger Tacos\n-
-  Jerk Chicken Pizza\n- Cheese Ravioli with Marinara
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-UID:e22a4306-1b8b-5cc1-9150-f38f1c48a628
-DTSTAMP:20261018T225018Z
-DTSTART;VALUE=DATE:20261014
-DTEND;VALUE=DATE:20261014
-SUMMARY:Loyola: 6 PC. Chicken Nugget (+4 more)
-DESCRIPTION:- 6 PC. Chicken Nugget\n- Korean Rice Bowl\n- Pesto Pepperoni P
- izza\n- Chicken Alfredo Bake\n- Chicken Tikka Masala
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-UID:192a044e-50c2-584b-a6e9-c5fc34d09860
-DTSTAMP:20261018T225018Z
-DTSTART;VALUE=DATE:20261015
-DTEND;VALUE=DATE:20261015
-SUMMARY:Loyola: Snack Cheeseburger (+4 more)
-DESCRIPTION:- Snack Cheeseburger\n- Don's Spicy Buff Wrap Station\n- Meatba
- ll Sub - Mangia\n- Mexican Enchilada Pizza\n- Oklahoma Smoked Pulled Pork C
- ombo
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
-UID:639ffa32-93cd-5243-9c1a-73f9ec2248e5
-DTSTAMP:20261018T225018Z
-DTSTART;VALUE=DATE:20261016
-DTEND;VALUE=DATE:20261016
-SUMMARY:Loyola: Honey-Fried Chicken Sandwich (+4 more)
-DESCRIPTION:- Honey-Fried Chicken Sandwich\n- Pepperoni and Jalapeño Pizza
- \n- Vegetable Pesto  Flatbread Pizza\n- Smoked Brisket Plate\n- Macaroni an
- d Cheese Side
-TRANSP:TRANSPARENT
-END:VEVENT
-BEGIN:VEVENT
 UID:d8ab2911-400d-5b06-a2d2-a68eae260485
-DTSTAMP:20261018T225018Z
+DTSTAMP:20261019T172459Z
 DTSTART;VALUE=DATE:20261019
 DTEND;VALUE=DATE:20261019
-SUMMARY:Loyola: Chicken Sandwich with SAGE Fillet Sauce (+4 more)
-DESCRIPTION:- Chicken Sandwich with SAGE Fillet Sauce\n- Seafood Salad Sand
- wich\n- Pepperoni Pizza\n- Tortellini with Marinara\n- Build Your Own Pasta
-  Bowl
+SUMMARY:Loyola: Nachos & Cheese (+5 more)
+DESCRIPTION:- Nachos & Cheese\n- Chicken Sandwich with SAGE Fillet Sauce\n-
+  Seafood Salad Sandwich\n- Pepperoni Pizza\n- Tortellini with Marinara\n- B
+ uild Your Own Pasta Bowl
 TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:bf844120-1c25-57f4-a72b-d5b5a48177f1
-DTSTAMP:20261018T225018Z
+DTSTAMP:20261019T172459Z
 DTSTART;VALUE=DATE:20261020
 DTEND;VALUE=DATE:20261020
 SUMMARY:Loyola: Snack Wraps (+4 more)
@@ -81,7 +28,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:4c01231c-59d6-5fbf-a017-7077ab565c39
-DTSTAMP:20261018T225018Z
+DTSTAMP:20261019T172459Z
 DTSTART;VALUE=DATE:20261021
 DTEND;VALUE=DATE:20261021
 SUMMARY:Loyola: Mozzarella Sticks with Marinara Sauce (+4 more)
@@ -91,7 +38,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:fdeafdb0-d1bc-5f6c-8ffa-930fde1aa3bd
-DTSTAMP:20261018T225018Z
+DTSTAMP:20261019T172459Z
 DTSTART;VALUE=DATE:20261022
 DTEND;VALUE=DATE:20261022
 SUMMARY:Loyola: Snack Cheeseburger (+4 more)
@@ -101,7 +48,7 @@ TRANSP:TRANSPARENT
 END:VEVENT
 BEGIN:VEVENT
 UID:5bf11aa8-07e7-5f66-b538-3ad845be08e2
-DTSTAMP:20261018T225018Z
+DTSTAMP:20261019T172459Z
 DTSTART;VALUE=DATE:20261023
 DTEND;VALUE=DATE:20261023
 SUMMARY:Loyola: Baltimore Club Sandwich (+4 more)
