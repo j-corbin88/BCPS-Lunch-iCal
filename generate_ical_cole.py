@@ -65,6 +65,8 @@ REMOVE_NOISE_KEYWORDS = [
     "financial aid",
     "kairos",
     "college admissions",
+    "freshman",
+    "freshmen",
 ]
 
 REMOVE_SENIOR_KEYWORDS = [
