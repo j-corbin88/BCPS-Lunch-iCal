@@ -2,7 +2,7 @@ name: Generate Cole iCal
 
 on:
   schedule:
-    - cron: "0 21 * * 1-5"  # Weeknights 5 PM ET (Mon-Fri)
+    - cron: "0 22 * * 1-5"  # Weeknights 5 PM EST (Mon-Fri)
   workflow_dispatch:
 
 permissions:
